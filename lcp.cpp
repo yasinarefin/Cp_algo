@@ -86,5 +86,54 @@ void solve(){
     cout<<(n * n + n) / 2 -sum<<endl;
 }
 int main(){
-    int t; cin>>t;while(t--) solve();
+   // int t; cin>>t;while(t--) solve();
+    string s; cin>>s;
+    ll n = s.length();
+    vector<int> suf = suffix_array_construction(s);
+
+//    for(auto i : suf)
+//        cout<<i<<endl;
+
+//    cout<<endl;
+
+    vector<int> lcp = lcp_construction(s, suf);
+
+//    for(auto i : lcp)
+//        cout<<i<<endl;
+
+
+    map<int, int> el;
+
+    int pos = 0;
+    for(auto i : suf){
+        if(i == 0) break;
+        pos++;
+    }
+    int mina = 1e9;
+    int ran[n+1] = {};
+    for(int x = pos; x< (int)lcp.size(); x++){
+        mina = min(mina, lcp[x]);
+        if(mina == 0) break;
+        ran[1]++;
+        ran[mina+1]--;
+        if(n-suf[x + 1] == mina) el[mina]++;
+    }
+    mina = 1e9;
+
+    for(int x=pos-1;x>=0;x--){
+        mina = min(mina, lcp[x]);
+        if(mina == 0) break;
+        ran[1]++;
+        ran[mina+1]--;
+        if(n - suf[x] == mina) el[mina]++;
+    }
+    for(int x=1;x<=n;x++)
+        ran[x] += ran[x-1];
+
+    cout<<el.size()+1<<endl;
+    for(auto i : el){
+        cout<<i.first<<" "<<ran[i.first]+1<<endl;
+    }
+    cout<<n<<" 1"<<endl;
+
 }
