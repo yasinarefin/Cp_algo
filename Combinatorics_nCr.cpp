@@ -17,7 +17,7 @@ ll modInverse(ll n) {
    return power(n, mod - 2);
 }
 
-ll cal(ll n, ll r){
+ll nCr(ll n, ll r){
    if(r > n) return 0;
    return (fac[n] * modInverse(fac[r]) % mod * modInverse(fac[n - r]) % mod) % mod;
 }
