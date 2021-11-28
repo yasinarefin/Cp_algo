@@ -2,7 +2,7 @@ struct DSU{
     vector<int> id;
     vector<int> Size;
     int len;
-    QuickFindUF(int l){
+    DSU(int l){
         len=l;
         id.resize(l+1);
         Size.resize(l+1);
@@ -27,11 +27,12 @@ struct DSU{
         int r2 = root(id2);
         if(Size[r1]>Size[r2]){
             id[r2] = r1;
-            Size[r2]+=Size[r1];
+            Size[r1]+=Size[r2];
         }else{
             id[r1] = r2;
-            Size[r1]+=Size[r2];
+            Size[r2]+=Size[r1];
         }
+
     }
 
 };
