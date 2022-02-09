@@ -69,3 +69,62 @@ int main(){
         cout<<qu.second<<endl;
     }
 }
+
+typedef long long ll;
+
+const ll MAX = 10e10;
+
+pair<int, int> tree[400001];
+vector<int> arr;
+void build(int node, int l, int r){
+    if(l == r){
+        tree[node] = make_pair(arr[l-1], l);
+    }else{
+        int mid =(l+r)/2;
+        build(2*node, l, mid);
+        build(2*node+1, mid+1, r);
+        int mina = min(tree[2*node].first, tree[2*node+1].first);
+        tree[node].first = mina;
+        if(tree[2*node].first < tree[2*node+1].first){
+            tree[node].second = tree[2*node].second;
+        }else{
+            tree[node].second = tree[2*node+1].second;
+        }
+    }
+}
+
+
+pair<int, int> query(int node, int l, int r, int ql, int qr){
+    if(r < ql || l > qr){
+        return make_pair(MAX, 0);
+    }
+    if(l >= ql && r <= qr){
+        return tree[node];
+    }
+    int mid = (l+r)/2;
+    pair<int, int> q1 = query(node*2, l, mid, ql, qr);
+    pair<int, int> q2 = query(node*2+1, mid+1, r, ql, qr);
+    int mina = min(q1.first, q2.first);
+    int ret;
+    if(q1.first < q2.first){
+        ret = q1.second;
+    }else{
+        ret = q2.second;
+    }
+    return make_pair(mina, ret);
+}
+ll rec(int l, int r){
+    if(l>r) return 0;
+    if(r == l )return arr[l-1];
+    pair<int, int> m = query(1, 1, arr.size(), l, r);
+    ll op = m.first;
+    int mina = m.second;
+    
+    return max({(ll)(r-l+1) *op, rec( l, mina-1), rec( mina+1, r)});
+}
+int Solution::largestRectangleArea(vector<int> &A) {
+    arr=A;
+    build(1, 1, A.size());
+    return rec( 1, A.size());
+}
+
