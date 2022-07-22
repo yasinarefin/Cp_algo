@@ -1,3 +1,37 @@
+// max segment tree
+int arr[200005];
+
+int tree[800001];
+
+void build(int node, int l, int r){
+    if(l == r){
+        tree[node] = arr[l];
+    }else{
+        int mid =(l+r)/2;
+        build(2*node, l, mid);
+        build(2*node+1, mid+1, r);
+        int maxa = max(tree[2*node], tree[2*node+1]);
+        tree[node] = maxa;
+    }
+}
+
+
+int query(int node, int l, int r, int ql, int qr){
+    if(r < ql || l > qr){
+        return -1e9;
+    }
+    if(l >= ql && r <= qr){
+        return tree[node];
+    }
+    int mid = (l+r)/2;
+    int q1 = query(node*2, l, mid, ql, qr);
+    int q2 = query(node*2+1, mid+1, r, ql, qr);
+    int maxa = max(q1, q2);
+    return maxa;
+}
+// max segment tree end
+
+
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
